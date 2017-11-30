@@ -59,3 +59,17 @@ body {
 	font-weight: bold;
 	margin-left: 3em;
 }
+
+.dash-line {
+  animation: 1s fadein;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
