@@ -64,6 +64,10 @@ body {
   animation: 1s fadein;
 }
 
+.dash-paw {
+  float: right;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;
