@@ -4,6 +4,8 @@
 
 show_line_handler = null
 
+clue = 'intro'
+
 lines = [
         "Hi there,",
         "I know it's a special day for you, so I've put together a treat.",
@@ -21,6 +23,9 @@ got_pos = (pos) ->
   lat = pos.coords.latitude
   lng = pos.coords.longitude
   $('#output').text "(#{lat}, #{lng})"
+  $.ajax({url: "/checkpos", data: {
+      'lat': lat, 'lng': lng, 'clue': clue}}).done (response) ->
+    console.log "Response #{JSON.stringify(response)}"
 
 got_pos_fail = ->
   $('#output').text 'Getting your location failed'
@@ -40,5 +45,6 @@ $ ->
   $('#check-location').click ->
     have_geo = has_geolocation()
     console.log have_geo
-    navigator.geolocation.getCurrentPosition(got_pos, got_pos_fail);
+    # navigator.geolocation.getCurrentPosition(got_pos, got_pos_fail);
+    got_pos({coords: {latitude: 300, longitude: 100}})
     event.preventDefault()
