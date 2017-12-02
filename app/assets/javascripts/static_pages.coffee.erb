@@ -13,7 +13,7 @@ got_pos = (pos) ->
   console.log 'Got pos!' 
   lat = pos.coords.latitude
   lng = pos.coords.longitude
-  $('#output').text "(#{lat}, #{lng})"
+  console.log("lat: #{lat}, lng: #{lng}")
   $.ajax({url: "/checkpos", data: {
       'lat': lat, 'lng': lng, 'clue': clue}}).done (response) ->
     console.log "Response #{JSON.stringify(response)}"
@@ -22,6 +22,7 @@ got_pos_fail = ->
   $('#output').text 'Getting your location failed'
 
 speak = (name) ->
+  clue = name
   $.ajax({url: '/getlines', data: {name: name}}).done (response) ->
     show_lines response["lines"], response["block"], response["next"]
 
@@ -33,16 +34,17 @@ show_lines = (lines, block, next) ->
       content.scrollTop content.prop('scrollHeight')
     else
       content = $('.speech-content')
-      if !block
+      if block
+        $('#check-location').show()
+      else
         content.append '<%= image_tag "paw-print.png", size: "100x100", class: "dash-paw" %>'
         content.scrollTop content.prop('scrollHeight')
         $('.dash-paw').click ->
-          console.log 'Next'
           content.empty()
           speak next
       window.clearInterval(show_line_handler)
       show_line_handler = null
-  show_line_handler = window.setInterval(show_line, 2000)
+  show_line_handler = window.setInterval(show_line, 200)
 
 $ ->
   speak "intro"
@@ -50,6 +52,6 @@ $ ->
   $('#check-location').click ->
     have_geo = has_geolocation()
     console.log have_geo
-    # navigator.geolocation.getCurrentPosition(got_pos, got_pos_fail);
-    got_pos({coords: {latitude: 300, longitude: 100}})
+    navigator.geolocation.getCurrentPosition(got_pos, got_pos_fail);
+    # got_pos({coords: {latitude: 300, longitude: 100}})
     event.preventDefault()
