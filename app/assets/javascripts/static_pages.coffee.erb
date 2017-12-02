@@ -52,6 +52,8 @@ $ ->
   $('#check-location').click ->
     have_geo = has_geolocation()
     console.log have_geo
-    navigator.geolocation.getCurrentPosition(got_pos, got_pos_fail);
-    # got_pos({coords: {latitude: 300, longitude: 100}})
+    # navigator.geolocation.getCurrentPosition(got_pos, got_pos_fail)
+    # Not going to get https working locally for time constraints. Hard
+    # code values of home.
+    got_pos({coords: {latitude: 37.371859, longitude: -122.0212337}})
     event.preventDefault()

@@ -37,8 +37,20 @@ CLUE_DESTINATION = {
 
 EARTH_RADIUS_MILES = 3959
 
+def to_radians(deg)
+  deg * Math::PI / 180
+end
+
 def find_distance(coord1, coord2)
-  return 3
+  lat1 = to_radians coord1[:lat]
+  lng1 = to_radians coord1[:lng]
+  lat2 = to_radians coord2[:lat]
+  lng2 = to_radians coord2[:lng]
+  lat_diff = (lat1 - lat2).abs
+  lng_diff = (lng1 - lng2).abs
+  a = Math.sin(lat_diff/2)**2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(lng_diff/2) ** 2
+  c = 2 * Math.asin(Math.sqrt a)
+  EARTH_RADIUS_MILES * c
 end
 
 class StaticPagesController < ApplicationController
@@ -51,8 +63,8 @@ class StaticPagesController < ApplicationController
   end
 
   def checkpos
-    lat = params[:lat]
-    lng = params[:lng]
+    lat = params[:lat].to_f
+    lng = params[:lng].to_f
     clue = params[:clue]
     destination = CLUE_DESTINATION[clue]
     dist = find_distance({:lat => lat, :lng => lng}, destination)
