@@ -2,8 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-show_line_handler = null
-
 clue = 'intro'
 
 has_geolocation = ->
@@ -25,24 +23,29 @@ got_pos = (pos) ->
   console.log("lat: #{lat}, lng: #{lng}")
   $.ajax({url: "/checkpos", data: {
       'lat': lat, 'lng': lng, 'clue': clue}}).done (response) ->
-    console.log "Response #{JSON.stringify(response)}"
+        lines = response['lines']
+        $('.speech-content').empty()
+        show_lines(lines).then ->
+          content = $('.speech-content')
+          content.append '<%= image_tag "paw-print.png", size: "100x100", class: "dash-paw" %>'
+          content.scrollTop content.prop('scrollHeight')
+          $('.dash-paw').click ->
+            content.empty()
+            set_pose 'default-pose'
+            speak clue
+        console.log "Response #{JSON.stringify(response)}"
 
 got_pos_fail = ->
   $('#output').text 'Getting your location failed'
 
 speak = (name) ->
   $.ajax({url: '/getlines', data: {name: name}}).done (response) ->
-    show_lines name, response["lines"], response["block"], response["next"]
-
-show_lines = (name, lines, block, next) ->
-  if block
-    clue = name
-  show_line = ->
-    if lines.length
-      content = $('.speech-content')
-      content.append "<p class='dash-line'>#{lines.shift()}</p>"
-      content.scrollTop content.prop('scrollHeight')
-    else
+    block = response["block"]
+    next = response["next"]
+    if block
+      clue = name
+    show_lines(response["lines"]).then ->
+      console.log('After show lines')
       content = $('.speech-content')
       if block
         $('#check-location').show()
@@ -52,9 +55,22 @@ show_lines = (name, lines, block, next) ->
         $('.dash-paw').click ->
           content.empty()
           speak next
-      window.clearInterval(show_line_handler)
-      show_line_handler = null
-  show_line_handler = window.setInterval(show_line, 200)
+
+show_lines = (lines) ->
+  show_line_handler = null
+  promise = new Promise((resolve, reject) ->
+    show_line = ->
+      if lines.length
+        content = $('.speech-content')
+        content.append "<p class='dash-line'>#{lines.shift()}</p>"
+        content.scrollTop content.prop('scrollHeight')
+      else
+        window.clearInterval(show_line_handler)
+        show_line_handler = null
+        resolve('yay')
+    show_line_handler = window.setInterval(show_line, 200)
+  )
+  return promise
 
 $ ->
   speak "intro"
