@@ -22,11 +22,12 @@ got_pos_fail = ->
   $('#output').text 'Getting your location failed'
 
 speak = (name) ->
-  clue = name
   $.ajax({url: '/getlines', data: {name: name}}).done (response) ->
-    show_lines response["lines"], response["block"], response["next"]
+    show_lines name, response["lines"], response["block"], response["next"]
 
-show_lines = (lines, block, next) ->
+show_lines = (name, lines, block, next) ->
+  if block
+    clue = name
   show_line = ->
     if lines.length
       content = $('.speech-content')

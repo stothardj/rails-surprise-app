@@ -20,6 +20,28 @@ DASH_LINES = {
   ],
 }
 
+SUCCESS_LINES = {
+  "bestseat" => [
+    "Yes, here it is!",
+  ],
+}
+
+REJECTION_LINES = {
+  "bestseat" => [
+    [
+      "No, this isn't what I meant.",
+      "You've read the clue all inside out.",
+    ],
+    [
+      "Nothing here.",
+      "You need to Pokemon Go back to the right city.",
+    ],
+    [
+      "The place sounded like it would be full of trees."
+    ],
+  ]
+}
+
 NEXT = {
   "intro" => "rules",
   "rules" => "bestseat"
@@ -68,6 +90,8 @@ class StaticPagesController < ApplicationController
     clue = params[:clue]
     destination = CLUE_DESTINATION[clue]
     dist = find_distance({:lat => lat, :lng => lng}, destination)
-    render :json => {:test => "meow", :pos => "#{lat}x#{lng}", :clue => clue, :dist => dist}
+    success = dist < 3
+    lines = if success then SUCCESS_LINES[clue] else REJECTION_LINES[clue].sample end
+    render :json => {:success => success, :lines => lines}
   end
 end
