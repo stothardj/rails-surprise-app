@@ -69,6 +69,19 @@ body {
   float: right;
 }
 
+.default-pose .dash-img {
+  display: block;
+}
+
+.mag-pose .dash-mag-img {
+  display: block;
+}
+
+.dash-img,
+.dash-mag-img {
+  display: none;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;

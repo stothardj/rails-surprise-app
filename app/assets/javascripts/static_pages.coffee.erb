@@ -9,7 +9,16 @@ clue = 'intro'
 has_geolocation = ->
   return !!navigator.geolocation
 
+set_pose = (pose) ->
+  container = $('.dash-container')
+  classes = container.attr('class').split(/\s+/)
+  for cls in classes
+    if cls.endsWith "pose"
+      container.removeClass cls
+  container.addClass pose
+
 got_pos = (pos) ->
+  set_pose 'mag-pose'
   console.log 'Got pos!' 
   lat = pos.coords.latitude
   lng = pos.coords.longitude
