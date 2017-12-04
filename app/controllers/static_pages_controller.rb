@@ -18,11 +18,23 @@ DASH_LINES = {
     "And it was here you had the best seat in the house!",
     "It was reserved for just you.",
   ],
+  "fetch" => [
+    "Fetch is the classic game.",
+    "It existed long before even Mark Twain.",
+    "Yet though in such a competition I'm sure to take gold",
+    "Here some great challenges did unfold",
+  ],
 }
 
 SUCCESS_LINES = {
   "bestseat" => [
     "Yes, here it is!",
+    "It was Jake's idea to call hiself the best seat, sorry about him.",
+  ],
+  "fetch" => [
+    "Wohoo!",
+    "Offbeat Olympics looks like it was a ton of fun!",
+    "(I check the website regularly)",
   ],
 }
 
@@ -39,22 +51,37 @@ REJECTION_LINES = {
     [
       "The place sounded like it would be full of trees."
     ],
-  ]
+  ],
+  "fetch" => [
+    [
+      "This isn't right.",
+      "Games are popular worldwide,",
+      "but you shouldn't have to go to far to find these ones.",
+    ],
+    [
+      "No...",
+      "Maybe with a different clue you'd be better off.",
+      "Beats me what it should have been though.",
+    ]
+  ],
 }
 
 NEXT = {
   "intro" => "rules",
-  "rules" => "bestseat"
+  "rules" => "bestseat",
+  "bestseat" => "fetch",
 }
 
 BLOCK_FOR_CLUE = {
   "intro" => false,
   "rules" => false,
   "bestseat" => true,
+  "fetch" => true,
 }
 
 CLUE_DESTINATION = {
   "bestseat" => {:lat => 37.486731, :lng => -122.229672},
+  "fetch" => {:lat => 37.378095, :lng => -122.042012},
 }
 
 EARTH_RADIUS_MILES = 3959
@@ -90,8 +117,10 @@ class StaticPagesController < ApplicationController
     clue = params[:clue]
     destination = CLUE_DESTINATION[clue]
     dist = find_distance({:lat => lat, :lng => lng}, destination)
-    success = dist < 3
+    success = dist < 15
     lines = if success then SUCCESS_LINES[clue] else REJECTION_LINES[clue].sample end
-    render :json => {:success => success, :lines => lines}
+    response = {:success => success, :lines => lines}
+    response[:next] = NEXT[clue] if success
+    render :json => response
   end
 end

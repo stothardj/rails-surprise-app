@@ -32,7 +32,8 @@ got_pos = (pos) ->
           $('.dash-paw').click ->
             content.empty()
             set_pose 'default-pose'
-            speak clue
+            text = if response['success'] then response['next'] else clue
+            speak text
         console.log "Response #{JSON.stringify(response)}"
 
 got_pos_fail = ->
@@ -50,6 +51,7 @@ speak = (name) ->
       if block
         $('#check-location').show()
       else
+        $('#check-location').hide()
         content.append '<%= image_tag "paw-print.png", size: "100x100", class: "dash-paw" %>'
         content.scrollTop content.prop('scrollHeight')
         $('.dash-paw').click ->
