@@ -24,6 +24,30 @@ DASH_LINES = {
     "Yet though in such a competition I'm sure to take gold",
     "Here some great challenges did unfold",
   ],
+  "outro" => [
+    "Hope you've been having fun so far!",
+    "I've only got one last clue.",
+  ],
+  "cold" => [
+    "Am I cold or am I sweet?",
+    "Or am I just something to eat?",
+    "The next clue is buried where you did ....",
+  ],
+  "final" => [
+    "You did it!",
+    "You completed the scavenger hunt!",
+    "But wait, what was the buried treasure?",
+  ],
+  "final2" => [
+    "I've been digging up memories!",
+    "Little bits of your past I hope you remember."
+  ],
+  "final3" => [
+    "And hopefully, make many more of....",
+  ],
+  "finally" => [
+    "Happy Anniversary!!!",
+  ],
 }
 
 SUCCESS_LINES = {
@@ -35,6 +59,10 @@ SUCCESS_LINES = {
     "Wohoo!",
     "Offbeat Olympics looks like it was a ton of fun!",
     "(I check the website regularly)",
+  ],
+  "cold" => [
+    "Aww, you too met here",
+    "Was the gelato here as good as what we had in Venice?",
   ],
 }
 
@@ -64,12 +92,34 @@ REJECTION_LINES = {
       "Beats me what it should have been though.",
     ]
   ],
+  "cold" => [
+    [
+      "You misread the clue,",
+      "But don't be blue.",
+      "The truth is there waiting for you.",
+    ],
+    [
+      "Well I'm not cold.",
+      "Huskies like me never get cold.",
+      "That doesn't mean this place isn't cold though.",
+    ],
+    [
+      "Row, row, row your boat....",
+      "When can I practice rowing again?",
+    ],
+  ],
 }
 
 NEXT = {
   "intro" => "rules",
   "rules" => "bestseat",
   "bestseat" => "fetch",
+  "fetch" => "outro",
+  "outro" => "cold",
+  "cold" => "final",
+  "final" => "final2",
+  "final2" => "final3",
+  "final3" => "finally",
 }
 
 BLOCK_FOR_CLUE = {
@@ -77,11 +127,18 @@ BLOCK_FOR_CLUE = {
   "rules" => false,
   "bestseat" => true,
   "fetch" => true,
+  "outro" => false,
+  "cold" => true,
+  "final" => false,
+  "final2" => false,
+  "final3" => false,
+  "finally" => false,
 }
 
 CLUE_DESTINATION = {
   "bestseat" => {:lat => 37.486731, :lng => -122.229672},
   "fetch" => {:lat => 37.378095, :lng => -122.042012},
+  "cold" => {:lat => 37.393212, :lng => -122.079056},
 }
 
 EARTH_RADIUS_MILES = 3959

@@ -1,11 +1,4 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
-
 clue = 'intro'
-
-has_geolocation = ->
-  return !!navigator.geolocation
 
 set_pose = (pose) ->
   container = $('.dash-container')
@@ -16,11 +9,10 @@ set_pose = (pose) ->
   container.addClass pose
 
 got_pos = (pos) ->
+  $('#check-location').hide()
   set_pose 'mag-pose'
-  console.log 'Got pos!' 
   lat = pos.coords.latitude
   lng = pos.coords.longitude
-  console.log("lat: #{lat}, lng: #{lng}")
   $.ajax({url: "/checkpos", data: {
       'lat': lat, 'lng': lng, 'clue': clue}}).done (response) ->
         lines = response['lines']
@@ -34,7 +26,6 @@ got_pos = (pos) ->
             set_pose 'default-pose'
             text = if response['success'] then response['next'] else clue
             speak text
-        console.log "Response #{JSON.stringify(response)}"
 
 got_pos_fail = ->
   $('#output').text 'Getting your location failed'
@@ -46,17 +37,17 @@ speak = (name) ->
     if block
       clue = name
     show_lines(response["lines"]).then ->
-      console.log('After show lines')
       content = $('.speech-content')
       if block
         $('#check-location').show()
-      else
-        $('#check-location').hide()
+      else if next
         content.append '<%= image_tag "paw-print.png", size: "100x100", class: "dash-paw" %>'
         content.scrollTop content.prop('scrollHeight')
         $('.dash-paw').click ->
           content.empty()
           speak next
+      else
+        content.append '<%= image_tag "flowers.png", size: "500x500", class: "flower-img" %>'
 
 show_lines = (lines) ->
   show_line_handler = null
@@ -78,8 +69,6 @@ $ ->
   speak "intro"
 
   $('#check-location').click ->
-    have_geo = has_geolocation()
-    console.log have_geo
     # navigator.geolocation.getCurrentPosition(got_pos, got_pos_fail)
     # Not going to get https working locally for time constraints. Hard
     # code values of home.
