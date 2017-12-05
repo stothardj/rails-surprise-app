@@ -174,7 +174,7 @@ class StaticPagesController < ApplicationController
     clue = params[:clue]
     destination = CLUE_DESTINATION[clue]
     dist = find_distance({:lat => lat, :lng => lng}, destination)
-    success = dist < 15
+    success = dist < 1
     lines = if success then SUCCESS_LINES[clue] else REJECTION_LINES[clue].sample end
     response = {:success => success, :lines => lines}
     response[:next] = NEXT[clue] if success
